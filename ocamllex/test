@@ -1,0 +1,24 @@
+{
+}
+rule isverb = parse
+//rule 이름 = parse
+
+ | ['\t' ' ' ]+  { isverb lexbuf } //재귀적으로 다시 돌린다.
+ | ('is'|'am'|'are') as verb{
+    Printf.printf "%s is verb.\n" verb; isverb lexbuf } // verb로 간주한다.
+ | ['a'-'z' 'A'-'Z']+ as word{
+    Printf.printf "%s is not verb.\n" word; isverb lexbuf }
+ | _                 { isverb lexbuf }
+{
+  let main() =
+  let chnl = open_in Sys.argv.(1) in
+  let lexbuf = Lexing.from_channel chnl in//채널에서 버퍼 가져온다.
+  isverb lexbuf//함수처럼 돈다
+
+  let _ = Printexc.print main()
+}
+
+
+ocamllex _.mll
+ocamlc _.ml
+./a.out

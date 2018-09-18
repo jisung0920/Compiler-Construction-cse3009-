@@ -1,0 +1,43 @@
+%{
+참조해야하는 부분
+미리도는거
+}%
+
+%%
+정규표현식과 처리 (flex가 c코드로 바꿔줌)
+
+%%
+후처리\
+
+
+
+
+%{
+}%
+
+%%
+[\t ]+    {}
+//tap기호 혹은 공백  정규표현식이 입력이 되면  {} 을 실행
+is|am|are|was|be|being|been|do|does|did|will|would|should|can|could|has|have|had|go{printf("'%s': is a verb.\n",yytext);}
+[a-zA-Z]+ {printf("'%s': is not a verb.\n",yytext);}
+. | \n    {}
+//이외의 입력이 들어오면 에러가 난다. (.)은 전체
+//yytext 이전 꺼 저장
+
+// is        { printf("'is': is a verb.\n")}
+// am        { printf("'am': is a verb.\n")}
+// are       { printf("'are': is a verb.\n")}
+
+%%
+
+int main(){
+  yylex();//기본적으로 standard input으로 입력 받는다.
+  return 0;
+}
+
+flex -.l   // lex.yy.c 파일 생성
+gcc lex.yy.c -lfl  // 라이브러리 사용
+
+
+yyin // lexer가 돌아가는 input
+yytext // lexer가 돌아가는 yytext
