@@ -400,10 +400,10 @@ static yyconst YY_CHAR yy_ec[256] =
         1,    1,    1,    1,    1,    3,    1,    1,    1,    1,
         1,    4,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    5,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    1,    6,    1,    1,
 
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    7,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    1,    8,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -421,14 +421,14 @@ static yyconst YY_CHAR yy_ec[256] =
         1,    1,    1,    1,    1
     } ;
 
-static yyconst YY_CHAR yy_meta[6] =
+static yyconst YY_CHAR yy_meta[9] =
     {   0,
-        1,    1,    1,    1,    1
+        1,    1,    1,    1,    1,    1,    1,    1
     } ;
 
 static yyconst flex_uint16_t yy_base[10] =
     {   0,
-        0,    0,    6,    7,    7,    7,    7,    7,    7
+        0,    0,    9,   10,   10,   10,   10,   10,   10
     } ;
 
 static yyconst flex_int16_t yy_def[10] =
@@ -436,16 +436,16 @@ static yyconst flex_int16_t yy_def[10] =
         9,    1,    9,    9,    9,    9,    9,    9,    0
     } ;
 
-static yyconst flex_uint16_t yy_nxt[13] =
+static yyconst flex_uint16_t yy_nxt[19] =
     {   0,
-        4,    5,    6,    7,    8,    9,    3,    9,    9,    9,
-        9,    9
+        4,    5,    6,    7,    8,    6,    7,    8,    9,    3,
+        9,    9,    9,    9,    9,    9,    9,    9
     } ;
 
-static yyconst flex_int16_t yy_chk[13] =
+static yyconst flex_int16_t yy_chk[19] =
     {   0,
-        1,    1,    1,    1,    1,    3,    9,    9,    9,    9,
-        9,    9
+        1,    1,    1,    1,    1,    1,    1,    1,    3,    9,
+        9,    9,    9,    9,    9,    9,    9,    9
     } ;
 
 static yy_state_type yy_last_accepting_state;
@@ -723,7 +723,7 @@ yy_match:
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 7 );
+		while ( yy_base[yy_current_state] != 10 );
 
 yy_find_action:
 		yy_act = yy_accept[yy_current_state];
@@ -751,19 +751,19 @@ case 1:
 YY_RULE_SETUP
 #line 11 "baseball.l"
 {
+       if(g_round>5)
+        return 0;
        if(strike <2)
         strike++;
        else{
-
+         strike =0;
+         ball =0;
          if(out<2)
           out++;
          else{
           g_round++;
           out = 0;
          }
-
-         strike =0;
-         ball =0;
        }
       }
 	YY_BREAK
@@ -771,6 +771,8 @@ case 2:
 YY_RULE_SETUP
 #line 27 "baseball.l"
 {
+       if(g_round>5)
+        return 0;
        if(ball <3)
         ball++;
        else{
@@ -785,8 +787,11 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 39 "baseball.l"
-{strike =0;
+#line 41 "baseball.l"
+{
+       if(g_round>5)
+        return 0;
+       strike =0;
        ball =0;
        if(g_round%2==0)
         a_point++;
@@ -796,15 +801,15 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 46 "baseball.l"
+#line 51 "baseball.l"
 {}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 47 "baseball.l"
+#line 52 "baseball.l"
 ECHO;
 	YY_BREAK
-#line 808 "lex.yy.c"
+#line 813 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1805,15 +1810,25 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 47 "baseball.l"
+#line 52 "baseball.l"
 
 
 
 int main(int argc, char** argv){
-
+  FILE *file;
+  file = fopen(argv[1],"r");
+  if(!file){
+    perror("no file\n");
+    exit(1);
+  }
+  yyin = file;
   yylex();
-  printf("apoint : %d\n",a_point );
-  printf("bpoint : %d\n",b_point );
+  printf("a : %d\n",a_point );
+  printf("b : %d\n",b_point );
+  if(g_round>5)
+    printf("게임 종료\n");
+  else
+    printf("게임 진행 중\n");
   return 0;
 }
 
