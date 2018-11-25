@@ -1,0 +1,9 @@
+NEWLINE=1
+STARs=2
+EQs=3
+HLINEs=4
+TEXT=5
+EQ=6
+HLINE=7
+'='=6
+'-'=7
